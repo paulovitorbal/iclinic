@@ -1,4 +1,3 @@
-
 ifeq (composer,$(firstword $(MAKECMDGOALS)))
   COMPOSER_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(COMPOSER_ARGS):;@:)
@@ -10,7 +9,13 @@ composer:
 
 tests:
 	docker compose run php-fpm php vendor/bin/phpunit
-code-analysis:
+
+psalm:
+	docker compose run php-fpm php vendor/bin/psalm
+
+phpcs:
 	docker compose run php-fpm php vendor/bin/phpcs
 
-.PHONY: tests code-analysis
+code-analysis: phpcs psalm
+
+.PHONY: tests code-analysis phpcs psalm
