@@ -10,5 +10,7 @@ composer:
 
 tests:
 	docker compose run php-fpm php vendor/bin/phpunit
+code-analysis:
+	docker compose run php-fpm php vendor/bin/phpcs
 
-.PHONY: tests
+.PHONY: tests code-analysis
