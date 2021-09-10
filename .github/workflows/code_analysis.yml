@@ -20,9 +20,8 @@ jobs:
           files: "**.php"
           phpcs_path: php phpcs.phar
           standard: phpcs.xml
-      - name: Psalm
-        uses: docker://vimeo/psalm-github-actions
-          with:
-            composer_require_dev: true
-            composer_ignore_platform_reqs: true
-            security_analysis: true
+      - uses: docker://vimeo/psalm-github-actions
+        with:
+          composer_require_dev: true
+          composer_ignore_platform_reqs: true
+          security_analysis: true
