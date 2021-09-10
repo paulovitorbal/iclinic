@@ -1,5 +1,7 @@
 <?php
+
 namespace Tests\Integration;
+
 use Tests\TestCase;
 
 class PrescriptionTest extends TestCase
@@ -14,7 +16,8 @@ class PrescriptionTest extends TestCase
         $this->post('/prescriptions');
 
         $this->assertEquals(
-            '', $this->response->getContent()
+            '',
+            $this->response->getContent()
         );
         $this->assertEquals(200, $this->response->getStatusCode());
     }
