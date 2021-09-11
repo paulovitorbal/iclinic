@@ -51,7 +51,7 @@ $app->configure('app');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\Psr15AdapterServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
@@ -69,5 +69,11 @@ $app->configure('app');
 $app->router->group([], function ($router) {
     require __DIR__ . '/../routes/api.php';
 });
+
+$app->middleware(
+    [
+        \App\Middlewares\BadRequestInterceptor::class
+    ]
+);
 
 return $app;

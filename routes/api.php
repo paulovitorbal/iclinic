@@ -2,7 +2,7 @@
 
 /** @var Router $router */
 
-use App\Api\Controllers\PresciptionsController;
+use App\Api\Prescription\PrescriptionsController;
 use Laravel\Lumen\Routing\Router;
 
-$router->post('/prescriptions', PresciptionsController::class);
+$router->post('/prescriptions', PrescriptionsController::class);

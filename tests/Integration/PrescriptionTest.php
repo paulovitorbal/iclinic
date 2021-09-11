@@ -6,19 +6,54 @@ use Tests\TestCase;
 
 class PrescriptionTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testPostReturns200()
+    public function testBadRequestReturns400(): void
     {
-        $this->post('/prescriptions');
-
-        $this->assertEquals(
-            '',
-            $this->response->getContent()
+        $response = $this->json(
+            'POST',
+            '/prescriptions',
+            [
+            ],
+            [
+                'Content-Type' => 'application/json'
+            ]
         );
-        $this->assertEquals(200, $this->response->getStatusCode());
+
+        $response->seeJson(
+            [
+                'error' => [
+                    'message' => 'malformed request',
+                    'code' => '01'
+                ]
+            ]
+        );
+
+        $response->assertResponseStatus(400);
+    }
+
+    public function testWellFormedRequestReturns201(): void
+    {
+        $response = $this->json(
+            'POST',
+            '/prescriptions',
+            [
+                'clinic' => [
+                    'id' => 1,
+                ],
+                'physician' => [
+                    'id' => 2,
+                ],
+                'patient' => [
+                    'id' => 3,
+                ],
+                'text' => 'Dipirona 1x ao dia',
+            ],
+            [
+                'Content-Type' => 'application/json'
+            ]
+        );
+
+        $response->seeJson([]);
+
+        $response->assertResponseStatus(201);
     }
 }
