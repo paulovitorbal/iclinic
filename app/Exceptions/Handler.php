@@ -4,8 +4,8 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
-use Laminas\Diactoros\Response\JsonResponse;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
@@ -35,6 +35,4 @@ class Handler extends ExceptionHandler
 
         return parent::prepareJsonResponse($request, $e);
     }
-
-
 }
