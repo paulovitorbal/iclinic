@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 ifeq (composer,$(firstword $(MAKECMDGOALS)))
   COMPOSER_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(COMPOSER_ARGS):;@:)
@@ -17,5 +19,7 @@ phpcs:
 	docker compose run php-fpm php vendor/bin/phpcs
 
 code-analysis: phpcs psalm
+
+all: tests code-analysis
 
 .PHONY: tests code-analysis phpcs psalm
