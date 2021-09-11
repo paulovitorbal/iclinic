@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Api\Prescription;
 
+use App\Api\Request;
 use App\Api\RequestParser;
 use App\Exceptions\BadRequest;
 use InvalidArgumentException;
@@ -18,7 +19,7 @@ class NewPrescriptionRequestParser implements RequestParser
      * # on this context
      * @psalm-suppress MixedArrayAccess,MixedArgument
      */
-    public function parse(ServerRequestInterface $request): NewPrescriptionRequest
+    public function parse(ServerRequestInterface $request): Request
     {
         try {
             $params = $request->getParsedBody();
