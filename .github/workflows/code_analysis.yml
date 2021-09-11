@@ -17,7 +17,7 @@ jobs:
           php phpcs.phar --version
       - uses: thenabeel/action-phpcs@v8
         with:
-          files: "**.php"
+          files: "*.php"
           phpcs_path: php phpcs.phar
           standard: phpcs.xml
       - uses: docker://vimeo/psalm-github-actions
