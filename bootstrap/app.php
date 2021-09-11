@@ -70,10 +70,14 @@ $app->router->group([], function ($router) {
     require __DIR__ . '/../routes/api.php';
 });
 
-$app->middleware(
-    [
-        \App\Middlewares\BadRequestInterceptor::class
-    ]
+$app->singleton(
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    App\Exceptions\Handler::class
+);
+
+$app->singleton(
+    Illuminate\Contracts\Console\Kernel::class,
+    App\Console\Kernel::class
 );
 
 return $app;
