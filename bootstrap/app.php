@@ -81,4 +81,6 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->register(LumenGeneratorServiceProvider::class);
+
 return $app;
