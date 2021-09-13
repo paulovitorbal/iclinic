@@ -29,4 +29,16 @@ class StdClassFactory implements ExternalDTOFactory
 
         return new Clinic($input->name, (int)$input->id);
     }
+
+    public function createPatient($input): Patient
+    {
+        Assert::isInstanceOf($input, \stdClass::class);
+        Assert::stringNotEmpty($input->name);
+        Assert::positiveInteger((int)$input->id);
+        Assert::stringNotEmpty($input->email);
+        Assert::email($input->email);
+        Assert::stringNotEmpty($input->phone);
+
+        return new Patient($input->name, (int)$input->id, $input->email, $input->phone);
+    }
 }
