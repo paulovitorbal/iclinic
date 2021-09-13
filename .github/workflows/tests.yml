@@ -14,6 +14,8 @@ jobs:
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: iclinic
+          MYSQL_USER: iclinic
+          MYSQL_PASSWORD: ${{ secrets.DATABASE_TESTING_PASSWORD }}
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -59,4 +61,7 @@ jobs:
         run: vendor/bin/phpunit --verbose
         env:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
-          DB_USERNAME: root
+          DB_USERNAME: iclinic
+          DB_DATABASE: iclinic
+          DB_PASSWORD: ${{ secrets.DATABASE_TESTING_PASSWORD }}
+
