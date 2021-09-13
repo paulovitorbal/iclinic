@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Api\Prescription;
+namespace App\DTO;
 
-use App\Api\Request;
+use App\Request;
 
 class NewPrescriptionRequest implements Request
 {

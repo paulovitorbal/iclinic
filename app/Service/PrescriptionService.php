@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Api\Prescription\NewPrescriptionRequest;
+use App\DTO\NewPrescriptionRequest;
 use App\Models\Prescription;
 use Illuminate\Database\DatabaseManager;
 

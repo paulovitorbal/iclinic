@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Api\Prescription;
 
-use App\Api\Request;
-use App\Api\RequestParser;
+use App\DTO\NewPrescriptionRequest;
 use App\Exceptions\BadRequest;
+use App\Request;
+use App\RequestParser;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Webmozart\Assert\Assert;

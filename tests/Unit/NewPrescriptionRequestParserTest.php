@@ -7,12 +7,10 @@ namespace Tests\Unit;
 use App\Api\Prescription\NewPrescriptionRequestParser;
 use App\Exceptions\BadRequest;
 use Laminas\Diactoros\ServerRequestFactory;
-use Monolog\Handler\TestHandler;
 use Tests\TestCase;
 
 class NewPrescriptionRequestParserTest extends TestCase
 {
-    private TestHandler $testHandler;
     private NewPrescriptionRequestParser $parser;
 
     public function setUp(): void
@@ -23,7 +21,6 @@ class NewPrescriptionRequestParserTest extends TestCase
 
     /**
      * @dataProvider provideBadRequestParameters
-     * @throws \JsonException
      */
     public function testParseBadRequests(array $params): void
     {
@@ -33,9 +30,6 @@ class NewPrescriptionRequestParserTest extends TestCase
         $this->parser->parse($request);
     }
 
-    /**
-     * @throws \JsonException
-     */
     public function testParseGoodRequest(): void
     {
         $request = ServerRequestFactory::fromGlobals()->withParsedBody(

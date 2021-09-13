@@ -11,6 +11,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "flipbox/lumen-generator": "^8.2",
+        "guzzlehttp/guzzle": "^7.3",
         "laminas/laminas-diactoros": "^2.6",
         "laravel/lumen-framework": "^8.0",
         "nyholm/psr7": "^1.4",

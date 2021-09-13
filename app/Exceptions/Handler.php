@@ -21,7 +21,7 @@ class Handler extends ExceptionHandler
         ValidationException::class,
     ];
 
-    protected function prepareJsonResponse($request, Throwable $e)
+    protected function prepareJsonResponse($request, Throwable $e): JsonResponse
     {
         if ($e instanceof BadRequest) {
             return new JsonResponse(

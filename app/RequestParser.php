@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace App;
 
 use Psr\Http\Message\ServerRequestInterface;
 

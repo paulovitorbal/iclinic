@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Database;
 
-use App\Api\Prescription\NewPrescriptionRequest;
+use App\DTO\NewPrescriptionRequest;
 use App\Models\Prescription;
 use App\Service\PrescriptionService;
 use Laravel\Lumen\Testing\DatabaseMigrations;
