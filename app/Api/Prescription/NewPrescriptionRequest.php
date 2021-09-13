@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Api\Prescription;
 
 use App\Api\Request;
