@@ -89,7 +89,7 @@ class ExternalConsumer
         );
     }
 
-    public function post(string $path, string $json, string $token = ''):\stdClass
+    public function post(string $path, string $json, string $token = ''): \stdClass
     {
         $lastException = null;
         for ($try = 0; $try <= $this->retry; $try++) {
