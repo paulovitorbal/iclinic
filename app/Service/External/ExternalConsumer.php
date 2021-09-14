@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\External;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Handler\MockHandler;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
@@ -23,7 +23,8 @@ class ExternalConsumer
     ) {
         $params = [
             'base_uri' => $url,
-            'timeout' => $timeout
+            'timeout' => $timeout,
+            'http_erros' => true,
         ];
         if ($mockHandler) {
             $params['handler'] = $mockHandler;
@@ -42,7 +43,11 @@ class ExternalConsumer
         for ($try = 0; $try <= $this->retry; $try++) {
             try {
                 if ($token === '') {
-                    $response = $this->client->get($path);
+                    $response = $this->client->get(
+                        $path,
+                        [
+                        ]
+                    );
                 } else {
                     $response = $this->client->get(
                         $path,
@@ -64,7 +69,7 @@ class ExternalConsumer
 
                 Assert::isInstanceOf($json, \stdClass::class);
                 return $json;
-            } catch (TransferException $e) {
+            } catch (ServerException $e) {
                 if ($this->logger) {
                     $this->logger->error(
                         sprintf(

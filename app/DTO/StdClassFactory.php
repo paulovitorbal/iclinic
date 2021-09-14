@@ -27,7 +27,7 @@ class StdClassFactory implements ExternalDTOFactory
         Assert::stringNotEmpty($input->name);
         Assert::positiveInteger((int)$input->id);
 
-        return new Clinic($input->name, (int)$input->id);
+        return new Clinic((int)$input->id, $input->name);
     }
 
     public function createPatient($input): Patient

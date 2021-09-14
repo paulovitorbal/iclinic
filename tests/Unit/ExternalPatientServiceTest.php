@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\DTO\StdClassFactory;
+use App\Exceptions\NotFound;
+use App\Exceptions\TooMuchRetries;
 use App\Service\External\ExternalPatientService;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Cache\Repository;
-use Illuminate\Support\Facades\Config;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use Tests\TestCase;
@@ -18,18 +21,6 @@ class ExternalPatientServiceTest extends TestCase
 {
     public function testGetSuccessfulRequest(): void
     {
-        Config::set(
-            'external-services.patients',
-            new \App\DTO\Config(
-                host: 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
-                route: '/patients/%d',
-                authentication: 'bearer ----',
-                timeout: 3,
-                retry: 2,
-                cacheTtl: 12 * 60
-            )
-        );
-
         $mock = new MockHandler(
             [
                 new Response(200, [], $this->getAssetContents('success-get-patients-by-id.json'))
@@ -64,7 +55,58 @@ class ExternalPatientServiceTest extends TestCase
         $this->assertEquals('413-218-5913 x9333', $cachedPatient->getPhone());
         $this->assertEquals('1', $cachedPatient->getId());
     }
+    public function testGetRequestNotFound(): void
+    {
+        $mock = new MockHandler(
+            [
+                RequestException::create(new Request('GET', '/patientsß/1'), new Response(404)),
+            ]
+        );
+        $testHandler = new TestHandler();
+        $logger = new Logger('test', [$testHandler]);
 
+        /** @var Repository $cache */
+        $cache = $this->app->make(Repository::class);
+
+        $externalService = new ExternalPatientService(
+            $cache,
+            $logger,
+            new StdClassFactory(),
+            $mock
+        );
+        $this->expectException(NotFound::class);
+        $this->expectExceptionMessage('Patient not found');
+        $this->expectExceptionCode(3);
+        $externalService->getPatient(1);
+    }
+    public function testGetRequestTooMuchRetries(): void
+    {
+        $mock = new MockHandler(
+            [
+                RequestException::create(new Request('GET', '/patient/1'), new Response(500)),
+                RequestException::create(new Request('GET', '/patient/1'), new Response(500)),
+                RequestException::create(new Request('GET', '/patient/1'), new Response(500)),
+                RequestException::create(new Request('GET', '/patient/1'), new Response(500)),
+                RequestException::create(new Request('GET', '/patient/1'), new Response(500)),
+            ]
+        );
+        $testHandler = new TestHandler();
+        $logger = new Logger('test', [$testHandler]);
+
+        /** @var Repository $cache */
+        $cache = $this->app->make(Repository::class);
+
+        $externalService = new ExternalPatientService(
+            $cache,
+            $logger,
+            new StdClassFactory(),
+            $mock
+        );
+        $this->expectException(TooMuchRetries::class);
+        $this->expectExceptionMessage('Patient service not available');
+        $this->expectExceptionCode(6);
+        $externalService->getPatient(1);
+    }
     private function getAssetContents(string $filename): string
     {
         return file_get_contents(__DIR__ . '/assets/ExternalConsumer/' . $filename);

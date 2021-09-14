@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Database;
 
-use App\DTO\NewPrescriptionRequest;
 use App\Models\Prescription;
-use App\Service\PrescriptionService;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -14,18 +12,16 @@ class PrescriptionDatabaseTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function testServiceWillSaveNewPrescription(): void
+    public function testSaveNewPrescription(): void
     {
-        /** @var PrescriptionService $service */
-        $service = $this->app->get(PrescriptionService::class);
-        $service->createAndEnrichPrescription(
-            new NewPrescriptionRequest(
-                1,
-                2,
-                3,
-                'test'
-            )
-        );
+        $prescription = new Prescription();
+        $prescription->clinicId = 1;
+        $prescription->physicianId = 2;
+        $prescription->patientId = 3;
+        $prescription->text = 'test';
+
+        $prescription->save();
+
         $prescriptions = Prescription::all();
         $this->assertCount(1, $prescriptions);
         $this->assertEquals(1, $prescriptions[0]->clinicId);

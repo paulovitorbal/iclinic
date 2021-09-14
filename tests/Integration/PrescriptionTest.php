@@ -42,10 +42,10 @@ class PrescriptionTest extends TestCase
                     'id' => 1,
                 ],
                 'physician' => [
-                    'id' => 2,
+                    'id' => 1,
                 ],
                 'patient' => [
-                    'id' => 3,
+                    'id' => 1,
                 ],
                 'text' => 'Dipirona 1x ao dia',
             ],

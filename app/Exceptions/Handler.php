@@ -23,7 +23,7 @@ class Handler extends ExceptionHandler
 
     protected function prepareJsonResponse($request, Throwable $e): JsonResponse
     {
-        if ($e instanceof BadRequest) {
+        if ($e instanceof BadRequest || $e instanceof NotFound) {
             return new JsonResponse(
                 [
                     'error' => [

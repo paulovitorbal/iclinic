@@ -7,6 +7,9 @@ namespace App\Service\External;
 use App\DTO\Config;
 use App\DTO\Patient;
 use App\DTO\StdClassFactory;
+use App\Exceptions\NotFound;
+use App\Exceptions\TooMuchRetries;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;
 use Illuminate\Contracts\Cache\Repository;
 use Psr\Log\LoggerInterface;
@@ -25,6 +28,7 @@ class ExternalPatientService
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \JsonException
+     * @throws NotFound
      */
     public function getPatient(int $id): Patient
     {
@@ -41,11 +45,19 @@ class ExternalPatientService
             $this->logger,
             $this->mockHandler
         );
-
-        $stdObject = $externalConsumer->get(
-            $this->getPatientRoute($id),
-            $this->getConfig()->getAuthentication()
-        );
+        try {
+            $stdObject = $externalConsumer->get(
+                $this->getPatientRoute($id),
+                $this->getConfig()->getAuthentication()
+            );
+        } catch (TooMuchAttemptsException $e) {
+            throw TooMuchRetries::patientNotAvailable($e);
+        } catch (ClientException $e) {
+            if ($e->getCode() === 404) {
+                throw NotFound::patientNotFound($e);
+            }
+            throw $e;
+        }
 
         $patient = $this->factory->createPatient($stdObject);
 

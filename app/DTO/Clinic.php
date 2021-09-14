@@ -7,12 +7,12 @@ namespace App\DTO;
 class Clinic
 {
     public function __construct(
-        private string $name,
-        private int $id
+        private int $id,
+        private ?string $name = null
     ) {
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

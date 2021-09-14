@@ -6,6 +6,7 @@ namespace Tests\Unit;
 
 use App\Service\External\ExternalConsumer;
 use App\Service\External\TooMuchAttemptsException;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
@@ -35,11 +36,11 @@ class ExternalConsumerTest extends TestCase
     {
         $mock = new MockHandler(
             [
-                new RequestException('Error 500 1', new Request('GET', 'test')),
-                new RequestException('Error 500 2', new Request('GET', 'test')),
-                new RequestException('Error 500 3', new Request('GET', 'test')),
-                new RequestException('Error 500 4', new Request('GET', 'test')),
-                new RequestException('Error 500 5', new Request('GET', 'test')),
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
             ]
         );
         $nullHandler = new NullHandler();
@@ -48,8 +49,25 @@ class ExternalConsumerTest extends TestCase
 
         $this->expectException(TooMuchAttemptsException::class);
         $this->expectExceptionMessage(
-            'Too much attempts [4] for [/physicians/1]. The last exception error was: [Error 500 4]'
+            'Too much attempts [4] for [/physicians/1]. The last exception error was: [Server error: `GET test` ' .
+            'resulted in a `500 Internal Server Error` response]'
         );
+        $consumer->get('/physicians/1');
+    }
+
+    public function testNotFound(): void
+    {
+        $mock = new MockHandler(
+            [
+                RequestException::create(new Request('GET', 'test'), new Response(404)),
+            ]
+        );
+        $nullHandler = new NullHandler();
+        $logger = new Logger('null', [$nullHandler]);
+        $consumer = new ExternalConsumer('https://www.example.com', 4, 3, $logger, $mock);
+
+        $this->expectException(ClientException::class);
+        $this->expectExceptionCode(404);
         $consumer->get('/physicians/1');
     }
 
