@@ -37,13 +37,6 @@ class Config
         return $this->timeout;
     }
 
-    public function getTimeoutAsDateInterval(): \DateInterval
-    {
-        return new \DateInterval(
-            sprintf('PT%dS', $this->timeout)
-        );
-    }
-
     public function getRetry(): int
     {
         return $this->retry;
@@ -52,5 +45,12 @@ class Config
     public function getCacheTtl(): int
     {
         return $this->cacheTtl ?? 0;
+    }
+
+    public function getCacheAsDateInterval(): \DateInterval
+    {
+        return new \DateInterval(
+            sprintf('PT%dS', $this->getCacheTtl())
+        );
     }
 }

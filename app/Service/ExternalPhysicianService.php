@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\DTO\Clinic;
 use App\DTO\Config;
+use App\DTO\Physician;
 use App\DTO\StdClassFactory;
 use App\Service\External\ExternalConsumer;
 use GuzzleHttp\Handler\MockHandler;
@@ -13,7 +14,7 @@ use Illuminate\Contracts\Cache\Repository;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
 
-class ExternalClinicService
+class ExternalPhysicianService
 {
     public function __construct(
         private Repository      $cache,
@@ -28,12 +29,12 @@ class ExternalClinicService
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \JsonException
      */
-    public function getClinic(int $id): Clinic
+    public function getPhysician(int $id): Physician
     {
-        if ($this->cache->has($this->getClinicRoute($id))) {
-            /** @var Clinic $clinic */
-            $clinic = $this->cache->get($this->getClinicRoute($id));
-            return $clinic;
+        if ($this->cache->has($this->getPhysicianRoute($id))) {
+            /** @var Clinic $physician */
+            $physician = $this->cache->get($this->getPhysicianRoute($id));
+            return $physician;
         }
 
         $externalConsumer = new ExternalConsumer(
@@ -45,22 +46,22 @@ class ExternalClinicService
         );
 
         $stdObject = $externalConsumer->get(
-            $this->getClinicRoute($id),
+            $this->getPhysicianRoute($id),
             $this->getConfig()->getAuthentication()
         );
 
-        $clinic = $this->factory->createClinic($stdObject);
+        $physician = $this->factory->createPhysician($stdObject);
 
         $this->cache->set(
-            $this->getClinicRoute($id),
-            $clinic,
+            $this->getPhysicianRoute($id),
+            $physician,
             $this->getConfig()->getCacheAsDateInterval()
         );
 
-        return $clinic;
+        return $physician;
     }
 
-    private function getClinicRoute(int $id): string
+    private function getPhysicianRoute(int $id): string
     {
         return sprintf(
             $this->getConfig()->getRoute(),
@@ -70,7 +71,7 @@ class ExternalClinicService
 
     private function getConfig(): Config
     {
-        $config = config('external-services.clinics');
+        $config = config('external-services.physicians');
         Assert::isInstanceOf($config, Config::class);
         return $config;
     }

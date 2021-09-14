@@ -54,7 +54,7 @@ class ExternalPatientService
         $this->cache->set(
             $this->getPatientRoute($id),
             $patient,
-            $this->getConfig()->getTimeoutAsDateInterval()
+            $this->getConfig()->getCacheAsDateInterval()
         );
 
         return $patient;
