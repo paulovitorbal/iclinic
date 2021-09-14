@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\DTO\Clinic;
 use App\DTO\NewMetricsRequest;
-use App\DTO\NewPrescriptionRequest;
 use App\Models\Prescription;
 use App\Service\External\ExternalClinicService;
 use App\Service\External\ExternalPatientService;
@@ -66,16 +65,6 @@ class PrescriptionService
             }
         );
 
-        return $prescription;
-    }
-
-    private function mapRequestToModel(NewPrescriptionRequest $request): Prescription
-    {
-        $prescription = new Prescription();
-        $prescription->clinicId = $request->getClinicId();
-        $prescription->physicianId = $request->getPhysicianId();
-        $prescription->patientId = $request->getPatientId();
-        $prescription->text = $request->getText();
         return $prescription;
     }
 }

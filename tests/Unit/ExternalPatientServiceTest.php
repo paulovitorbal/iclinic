@@ -8,6 +8,7 @@ use App\DTO\StdClassFactory;
 use App\Exceptions\NotFound;
 use App\Exceptions\TooMuchRetries;
 use App\Service\External\ExternalPatientService;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
@@ -77,6 +78,28 @@ class ExternalPatientServiceTest extends TestCase
         $this->expectException(NotFound::class);
         $this->expectExceptionMessage('Patient not found');
         $this->expectExceptionCode(3);
+        $externalService->getPatient(1);
+    }
+    public function testGetRequestBadRequest(): void
+    {
+        $mock = new MockHandler(
+            [
+                RequestException::create(new Request('GET', '/patientsß/1'), new Response(400)),
+            ]
+        );
+        $testHandler = new TestHandler();
+        $logger = new Logger('test', [$testHandler]);
+
+        /** @var Repository $cache */
+        $cache = $this->app->make(Repository::class);
+
+        $externalService = new ExternalPatientService(
+            $cache,
+            $logger,
+            new StdClassFactory(),
+            $mock
+        );
+        $this->expectException(ClientException::class);
         $externalService->getPatient(1);
     }
     public function testGetRequestTooMuchRetries(): void

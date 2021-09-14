@@ -44,7 +44,7 @@ class PrescriptionServiceTest extends TestCase
 
         $metricRequest = $prescriptionService->createMetricsRequest($prescription);
         $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . '/assets/new-metric-request.json',
+            __DIR__ . '/assets/ExternalConsumer/new-metric-request.json',
             $metricRequest->__toString()
         );
     }
@@ -142,7 +142,7 @@ class PrescriptionServiceTest extends TestCase
 
         $metricRequest = $prescriptionService->createMetricsRequest($prescription);
         $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . '/assets/new-metric-request-without-clinic-name.json',
+            __DIR__ . '/assets/ExternalConsumer/new-metric-request-without-clinic-name.json',
             $metricRequest->__toString()
         );
     }

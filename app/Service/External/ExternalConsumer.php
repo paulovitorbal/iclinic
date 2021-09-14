@@ -88,4 +88,58 @@ class ExternalConsumer
             $lastException
         );
     }
+
+    public function post(string $path, string $json, string $token = ''):\stdClass
+    {
+        $lastException = null;
+        for ($try = 0; $try <= $this->retry; $try++) {
+            try {
+                if ($token === '') {
+                    $response = $this->client->post(
+                        $path,
+                        [
+                            'json' => $json
+                        ]
+                    );
+                } else {
+                    $response = $this->client->post(
+                        $path,
+                        [
+                            'headers' => [
+                                'Authorization' => $token
+                            ],
+                            'json' => $json
+                        ]
+                    );
+                }
+
+                /** @var mixed $json */
+                $json = json_decode(
+                    $response->getBody()->getContents(),
+                    false,
+                    512,
+                    JSON_THROW_ON_ERROR
+                );
+
+                Assert::isInstanceOf($json, \stdClass::class);
+                return $json;
+            } catch (ServerException $e) {
+                if ($this->logger) {
+                    $this->logger->error(
+                        sprintf(
+                            'Attempt #%d: %s',
+                            $try,
+                            var_export($e, true)
+                        )
+                    );
+                }
+                $lastException = $e;
+            }
+        }
+        throw TooMuchAttemptsException::withPathAttempts(
+            $path,
+            $try,
+            $lastException
+        );
+    }
 }

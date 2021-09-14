@@ -32,7 +32,7 @@ class ExternalConsumerTest extends TestCase
         $this->assertEquals('1', $object->id);
     }
 
-    public function testRetry3TimesThenThrows(): void
+    public function testGetRequestRetry3TimesThenThrows(): void
     {
         $mock = new MockHandler(
             [
@@ -55,7 +55,7 @@ class ExternalConsumerTest extends TestCase
         $consumer->get('/physicians/1');
     }
 
-    public function testNotFound(): void
+    public function testGetRequestNotFound(): void
     {
         $mock = new MockHandler(
             [
@@ -69,6 +69,59 @@ class ExternalConsumerTest extends TestCase
         $this->expectException(ClientException::class);
         $this->expectExceptionCode(404);
         $consumer->get('/physicians/1');
+    }
+
+    public function testPostSuccessfulRequestWithToken(): void
+    {
+        $mock = new MockHandler(
+            [
+                new Response(201, [], $this->getAssetContents('success-post-metrics.json'))
+            ]
+        );
+
+        $jsonObject = $this->getAssetContents('new-metric-request.json');
+
+        $consumer = new ExternalConsumer('http://www.example.com', 4, 2, null, $mock);
+        $object = $consumer->post('/metric', $jsonObject, 'Bearer -----');
+        $this->assertEquals(30, $object->id);
+    }
+    public function testPostRequestWithTooMuchErrors(): void
+    {
+        $mock = new MockHandler(
+            [
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
+                RequestException::create(new Request('GET', 'test'), new Response(500)),
+            ]
+        );
+
+        $jsonObject = $this->getAssetContents('new-metric-request.json');
+        $nullHandler = new NullHandler();
+        $logger = new Logger('null', [$nullHandler]);
+        $consumer = new ExternalConsumer('http://www.example.com', 4, 2, $logger, $mock);
+
+        $this->expectException(TooMuchAttemptsException::class);
+        $this->expectExceptionMessage(
+            'Too much attempts [3] for [/metric]. The last exception error was: [Server error: `GET test` resulted ' .
+            'in a `500 Internal Server Error` response]'
+        );
+
+        $consumer->post('/metric', $jsonObject, 'Bearer -----');
+    }
+    public function testPostSuccessfulRequestWithoutToken(): void
+    {
+        $mock = new MockHandler(
+            [
+                new Response(201, [], $this->getAssetContents('success-post-metrics.json'))
+            ]
+        );
+
+        $jsonObject = $this->getAssetContents('new-metric-request.json');
+
+        $consumer = new ExternalConsumer('http://www.example.com', 4, 2, null, $mock);
+        $object = $consumer->post('/metric', $jsonObject);
+        $this->assertEquals(30, $object->id);
     }
 
     private function getAssetContents(string $filename): string
