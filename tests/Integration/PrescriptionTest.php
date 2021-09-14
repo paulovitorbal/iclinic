@@ -71,7 +71,26 @@ class PrescriptionTest extends TestCase
             ]
         );
 
-        $response->seeJson([]);
+        $response->seeJson(
+            [
+                'data' => [
+                    'id' => 1,
+                    'clinic' => [
+                        'id' => 1,
+                    ],
+                    'physician' => [
+                        'id' => 1,
+                    ],
+                    'patient' => [
+                        'id' => 1,
+                    ],
+                    'text' => 'Dipirona 1x ao dia',
+                    'metric' => [
+                        'id' => 30,
+                    ],
+                ],
+            ]
+        );
 
         $response->assertResponseStatus(201);
     }
