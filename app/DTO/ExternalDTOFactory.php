@@ -15,4 +15,6 @@ interface ExternalDTOFactory
     public function createClinic($input): Clinic;
 
     public function createPatient($input): Patient;
+
+    public function createMetricResponse($input): NewMetricResponse;
 }

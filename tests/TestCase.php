@@ -55,5 +55,16 @@ abstract class TestCase extends BaseTestCase
                 cacheTtl: 48 * 60
             )
         );
+        Config::set(
+            'external-services.metrics',
+            new \App\DTO\Config(
+                host: 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
+                route: '/metrics',
+                authentication: 'Bearer 0000',
+                timeout: 6,
+                retry: 5,
+                cacheTtl: null
+            )
+        );
     }
 }

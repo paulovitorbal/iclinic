@@ -41,4 +41,12 @@ class StdClassFactory implements ExternalDTOFactory
 
         return new Patient($input->name, (int)$input->id, $input->email, $input->phone);
     }
+
+    public function createMetricResponse($input): NewMetricResponse
+    {
+        Assert::isInstanceOf($input, \stdClass::class);
+        Assert::positiveInteger((int)$input->id);
+
+        return new NewMetricResponse((int) $input->id);
+    }
 }
