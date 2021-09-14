@@ -1,0 +1,12 @@
+{
+    "clinicId": 1,
+    "clinicName": null,
+    "physicianId": 1,
+    "physicianName": "Wesley Marquardt",
+    "physicianCrm": "0bc31b08-04f2-4eb8-b1b4-fd52f21622f4",
+    "patientId": 1,
+    "patientName": "Boyd Crooks",
+    "patientEmail": "Danial.Kassulke59@hotmail.com",
+    "patientPhone": "413-218-5913 x9333",
+    "prescriptionId": 1
+}

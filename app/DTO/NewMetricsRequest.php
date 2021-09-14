@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
-class NewMetricsRequest implements \JsonSerializable
+class NewMetricsRequest implements \JsonSerializable, \Stringable
 {
     public function __construct(
         private int $clinicId,
@@ -22,5 +22,10 @@ class NewMetricsRequest implements \JsonSerializable
     public function jsonSerialize()
     {
         return get_object_vars($this);
+    }
+
+    public function __toString():string
+    {
+        return json_encode($this->jsonSerialize(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
     }
 }
