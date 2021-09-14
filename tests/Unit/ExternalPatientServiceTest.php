@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\DTO\StdClassFactory;
-use App\Service\ExternalService;
+use App\Service\ExternalPatientService;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Cache\Repository;
@@ -14,23 +14,22 @@ use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use Tests\TestCase;
 
-class ExternalServiceTest extends TestCase
+class ExternalPatientServiceTest extends TestCase
 {
     public function testGetSuccessfulRequest(): void
     {
         Config::set(
             'external-services.patients',
-            [
-                'host' => 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
-                'route' => '/patients/%d',
-                'authentication' => 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZ' .
-                    'SI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJzZXJ2aWNlIjoicGF0aWVudHMifQ.Pr6Z58GzNRtjX8Y09hEBzl7' .
-                    'dluxsGiaxGlfzdaphzVU',
-                'timeout' => 3,
-                'retry' => 2,
-                'cacheTtl' => 12 * 60
-            ]
+            new \App\DTO\Config(
+                host: 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
+                route: '/patients/%d',
+                authentication: 'bearer ----',
+                timeout: 3,
+                retry: 2,
+                cacheTtl: 12 * 60
+            )
         );
+
         $mock = new MockHandler(
             [
                 new Response(200, [], $this->getAssetContents('success-get-patients-by-id.json'))
@@ -42,7 +41,7 @@ class ExternalServiceTest extends TestCase
         /** @var Repository $cache */
         $cache = $this->app->make(Repository::class);
 
-        $externalService = new ExternalService(
+        $externalService = new ExternalPatientService(
             $cache,
             $logger,
             new StdClassFactory(),
@@ -58,7 +57,8 @@ class ExternalServiceTest extends TestCase
         $this->assertEquals('413-218-5913 x9333', $patient->getPhone());
         $this->assertEquals('1', $patient->getId());
 
-        $cachedPatient = $externalService->getPatient(1);;
+        $cachedPatient = $externalService->getPatient(1);
+
         $this->assertEquals('Boyd Crooks', $cachedPatient->getName());
         $this->assertEquals('Danial.Kassulke59@hotmail.com', $cachedPatient->getEmail());
         $this->assertEquals('413-218-5913 x9333', $cachedPatient->getPhone());
