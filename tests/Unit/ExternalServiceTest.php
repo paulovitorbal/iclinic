@@ -23,7 +23,9 @@ class ExternalServiceTest extends TestCase
             [
                 'host' => 'https://5f71da6964a3720016e60ff8.mockapi.io/v1',
                 'route' => '/patients/%d',
-                'authentication' => 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJzZXJ2aWNlIjoicGF0aWVudHMifQ.Pr6Z58GzNRtjX8Y09hEBzl7dluxsGiaxGlfzdaphzVU',
+                'authentication' => 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZ' .
+                    'SI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJzZXJ2aWNlIjoicGF0aWVudHMifQ.Pr6Z58GzNRtjX8Y09hEBzl7' .
+                    'dluxsGiaxGlfzdaphzVU',
                 'timeout' => 3,
                 'retry' => 2,
                 'cacheTtl' => 12 * 60
@@ -61,7 +63,6 @@ class ExternalServiceTest extends TestCase
         $this->assertEquals('Danial.Kassulke59@hotmail.com', $cachedPatient->getEmail());
         $this->assertEquals('413-218-5913 x9333', $cachedPatient->getPhone());
         $this->assertEquals('1', $cachedPatient->getId());
-
     }
 
     private function getAssetContents(string $filename): string
