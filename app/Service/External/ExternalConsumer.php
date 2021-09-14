@@ -19,7 +19,7 @@ class ExternalConsumer
         int                      $timeout = 2,
         private int              $retry = 5,
         private ?LoggerInterface $logger = null,
-        MockHandler              $mockHandler = null
+        ?MockHandler             $mockHandler = null
     )
     {
         $params = [
@@ -37,12 +37,23 @@ class ExternalConsumer
      * @throws \JsonException
      * @throws TooMuchAttemptsException
      */
-    public function get(string $path): \stdClass
+    public function get(string $path, string $token = ''): \stdClass
     {
         $lastException = null;
         for ($try = 0; $try <= $this->retry; $try++) {
             try {
-                $response = $this->client->get($path);
+                if ($token === '') {
+                    $response = $this->client->get($path);
+                } else {
+                    $response = $this->client->get(
+                        $path,
+                        [
+                            'headers' => [
+                                'Authorization' => $token
+                            ]
+                        ]
+                    );
+                }
 
                 /** @var mixed $json */
                 $json = json_decode(

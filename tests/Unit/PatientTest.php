@@ -19,11 +19,11 @@ class PatientTest extends TestCase
             JSON_THROW_ON_ERROR
         );
         $factory = new StdClassFactory();
-        $physician = $factory->createPatient($json);
-        $this->assertEquals('Boyd Crooks', $physician->getName());
-        $this->assertEquals('Danial.Kassulke59@hotmail.com', $physician->getEmail());
-        $this->assertEquals('413-218-5913 x9333', $physician->getPhone());
-        $this->assertEquals('1', $physician->getId());
+        $patient = $factory->createPatient($json);
+        $this->assertEquals('Boyd Crooks', $patient->getName());
+        $this->assertEquals('Danial.Kassulke59@hotmail.com', $patient->getEmail());
+        $this->assertEquals('413-218-5913 x9333', $patient->getPhone());
+        $this->assertEquals('1', $patient->getId());
     }
 
     private function getAssetContents(string $filename): string
