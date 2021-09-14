@@ -8,11 +8,10 @@ class Patient
 {
     public function __construct(
         private string $name,
-        private int    $id,
+        private int $id,
         private string $email,
         private string $phone
-    )
-    {
+    ) {
     }
 
     public function getName(): string

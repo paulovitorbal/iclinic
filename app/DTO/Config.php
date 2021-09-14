@@ -10,11 +10,10 @@ class Config
         private string $host,
         private string $route,
         private string $authentication,
-        private int    $timeout,
-        private int    $retry,
-        private ?int   $cacheTtl,
-    )
-    {
+        private int $timeout,
+        private int $retry,
+        private ?int $cacheTtl,
+    ) {
     }
 
     public function getHost(): string

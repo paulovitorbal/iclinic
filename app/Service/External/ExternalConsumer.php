@@ -15,13 +15,12 @@ class ExternalConsumer
     private Client $client;
 
     public function __construct(
-        string                   $url,
-        int                      $timeout = 2,
-        private int              $retry = 5,
+        string $url,
+        int $timeout = 2,
+        private int $retry = 5,
         private ?LoggerInterface $logger = null,
-        ?MockHandler             $mockHandler = null
-    )
-    {
+        ?MockHandler $mockHandler = null
+    ) {
         $params = [
             'base_uri' => $url,
             'timeout' => $timeout

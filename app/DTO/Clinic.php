@@ -8,9 +8,8 @@ class Clinic
 {
     public function __construct(
         private string $name,
-        private int    $id
-    )
-    {
+        private int $id
+    ) {
     }
 
     public function getName(): string

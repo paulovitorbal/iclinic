@@ -9,12 +9,11 @@ use App\Request;
 class NewPrescriptionRequest implements Request
 {
     public function __construct(
-        private int    $clinicId,
-        private int    $physicianId,
-        private int    $patientId,
+        private int $clinicId,
+        private int $physicianId,
+        private int $patientId,
         private string $text
-    )
-    {
+    ) {
     }
 
     public function getClinicId(): int

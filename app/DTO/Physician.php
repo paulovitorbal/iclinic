@@ -9,9 +9,8 @@ class Physician
     public function __construct(
         private string $name,
         private string $crm,
-        private int    $id
-    )
-    {
+        private int $id
+    ) {
     }
 
     public function getName(): string

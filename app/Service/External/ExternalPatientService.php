@@ -15,12 +15,11 @@ use Webmozart\Assert\Assert;
 class ExternalPatientService
 {
     public function __construct(
-        private Repository      $cache,
+        private Repository $cache,
         private LoggerInterface $logger,
         private StdClassFactory $factory,
-        private ?MockHandler    $mockHandler = null
-    )
-    {
+        private ?MockHandler $mockHandler = null
+    ) {
     }
 
     /**
