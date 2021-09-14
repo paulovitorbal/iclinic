@@ -8,6 +8,7 @@ use App\DTO\Config;
 use App\DTO\NewMetricResponse;
 use App\DTO\NewMetricsRequest;
 use App\DTO\StdClassFactory;
+use App\Exceptions\TooMuchRetries;
 use GuzzleHttp\Handler\MockHandler;
 use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
@@ -35,11 +36,15 @@ class ExternalMetricService
             $this->mockHandler
         );
 
-        $stdObject = $externalConsumer->post(
-            $this->getConfig()->getRoute(),
-            json_encode($request, JSON_THROW_ON_ERROR),
-            $this->getConfig()->getAuthentication()
-        );
+        try {
+            $stdObject = $externalConsumer->post(
+                $this->getConfig()->getRoute(),
+                json_encode($request, JSON_THROW_ON_ERROR),
+                $this->getConfig()->getAuthentication()
+            );
+        } catch (TooMuchAttemptsException $e) {
+            throw TooMuchRetries::metricsNotAvailable($e);
+        }
 
         return $this->factory->createMetricResponse($stdObject);
     }

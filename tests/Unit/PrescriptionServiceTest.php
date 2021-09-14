@@ -7,6 +7,7 @@ namespace Tests\Unit;
 use App\DTO\StdClassFactory;
 use App\Models\Prescription;
 use App\Service\External\ExternalClinicService;
+use App\Service\External\ExternalMetricService;
 use App\Service\External\ExternalPatientService;
 use App\Service\External\ExternalPhysicianService;
 use App\Service\PrescriptionService;
@@ -27,11 +28,13 @@ class PrescriptionServiceTest extends TestCase
         $externalClinicService = $this->getExternalClinicService();
         $externalPhysicianService = $this->getExternalPhysicianService();
         $externalPatientService = $this->getExternalPatientService();
+        $externalMetricsService = $this->getExternalMetricService();
         $prescriptionService = new PrescriptionService(
             $this->app->make(DatabaseManager::class),
             $externalClinicService,
             $externalPhysicianService,
             $externalPatientService,
+            $externalMetricsService,
             $this->getLogger()
         );
 
@@ -119,17 +122,34 @@ class PrescriptionServiceTest extends TestCase
             $mock
         );
     }
+    private function getExternalMetricService(): ExternalMetricService
+    {
+        $mock = new MockHandler(
+            [
+                new Response(200, [], $this->getAssetContents('success-post-metrics.json'))
+            ]
+        );
+        $logger = $this->getLogger();
+
+        return new ExternalMetricService(
+            $logger,
+            new StdClassFactory(),
+            $mock
+        );
+    }
 
     public function testCreateMetricRequestWithClinicNotFound(): void
     {
         $externalClinicService = $this->getExternalClinicServiceWith404Return();
         $externalPhysicianService = $this->getExternalPhysicianService();
         $externalPatientService = $this->getExternalPatientService();
+        $externalMetricsService = $this->getExternalMetricService();
         $prescriptionService = new PrescriptionService(
             $this->app->make(DatabaseManager::class),
             $externalClinicService,
             $externalPhysicianService,
             $externalPatientService,
+            $externalMetricsService,
             $this->getLogger()
         );
 
