@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\DTO\StdClassFactory;
-use App\Service\ExternalPhysicianService;
+use App\Service\External\ExternalPhysicianService;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Cache\Repository;

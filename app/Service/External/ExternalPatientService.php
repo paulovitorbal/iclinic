@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\External;
 
 use App\DTO\Config;
 use App\DTO\Patient;
 use App\DTO\StdClassFactory;
-use App\Service\External\ExternalConsumer;
 use GuzzleHttp\Handler\MockHandler;
 use Illuminate\Contracts\Cache\Repository;
 use Psr\Log\LoggerInterface;

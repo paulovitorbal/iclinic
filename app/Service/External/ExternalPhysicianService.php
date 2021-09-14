@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\External;
 
-use App\DTO\Clinic;
 use App\DTO\Config;
 use App\DTO\Physician;
 use App\DTO\StdClassFactory;
-use App\Service\External\ExternalConsumer;
 use GuzzleHttp\Handler\MockHandler;
 use Illuminate\Contracts\Cache\Repository;
 use Psr\Log\LoggerInterface;
@@ -32,7 +30,7 @@ class ExternalPhysicianService
     public function getPhysician(int $id): Physician
     {
         if ($this->cache->has($this->getPhysicianRoute($id))) {
-            /** @var Clinic $physician */
+            /** @var Physician $physician */
             $physician = $this->cache->get($this->getPhysicianRoute($id));
             return $physician;
         }
