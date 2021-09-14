@@ -43,7 +43,10 @@ class PrescriptionServiceTest extends TestCase
         $prescription->text = 'text';
 
         $metricRequest = $prescriptionService->createMetricsRequest($prescription);
-        $this->assertJsonStringEqualsJsonFile(__DIR__ . '/assets/new-metric-request.json', $metricRequest->__toString());
+        $this->assertJsonStringEqualsJsonFile(
+            __DIR__ . '/assets/new-metric-request.json',
+            $metricRequest->__toString()
+        );
     }
 
     private function getExternalClinicService(): ExternalClinicService
@@ -138,7 +141,10 @@ class PrescriptionServiceTest extends TestCase
         $prescription->text = 'text';
 
         $metricRequest = $prescriptionService->createMetricsRequest($prescription);
-        $this->assertJsonStringEqualsJsonFile(__DIR__ . '/assets/new-metric-request-without-clinic-name.json', $metricRequest->__toString());
+        $this->assertJsonStringEqualsJsonFile(
+            __DIR__ . '/assets/new-metric-request-without-clinic-name.json',
+            $metricRequest->__toString()
+        );
     }
 
     private function getExternalClinicServiceWith404Return(): ExternalClinicService
