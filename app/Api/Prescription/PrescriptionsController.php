@@ -51,6 +51,7 @@ class PrescriptionsController
                     ],
                 ],
             ],
-            201);
+            201
+        );
     }
 }
