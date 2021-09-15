@@ -47,7 +47,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, gd, redis
           tools: composer:v2, cs2pr, phpcs, psalm
-          coverage: none
+          coverage: xdebug
 
       - name: Install dependencies
         uses: nick-invision/retry@v1
@@ -55,16 +55,6 @@ jobs:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress ${{ matrix.flags }}
-
-      - name: Execute tests
-        continue-on-error: ${{ matrix.php > 8 }}
-        run: vendor/bin/phpunit --verbose
-        env:
-          DB_CONNECTION: mysql
-          DB_PORT: ${{ job.services.mysql.ports[3306] }}
-          DB_USERNAME: iclinic
-          DB_DATABASE: iclinic
-          DB_PASSWORD: ${{ secrets.DATABASE_TESTING_PASSWORD }}
       - name: Test with phpunit
         run: vendor/bin/phpunit --coverage-text
         env:
