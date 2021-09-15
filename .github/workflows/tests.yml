@@ -1,4 +1,4 @@
-name: tests
+name: continuous-integration
 
 on:
   push:
@@ -46,7 +46,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, gd, redis
-          tools: composer:v2
+          tools: composer:v2, cs2pr, phpcs, psalm
           coverage: none
 
       - name: Install dependencies
@@ -65,4 +65,12 @@ jobs:
           DB_USERNAME: iclinic
           DB_DATABASE: iclinic
           DB_PASSWORD: ${{ secrets.DATABASE_TESTING_PASSWORD }}
-
+      - name: Test with phpunit
+        run: vendor/bin/phpunit --coverage-text
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: Run phpcs
+        run: phpcs -q --report=checkstyle | cs2pr
+      - name: Run Psalm
+        run: psalm --output-format=github

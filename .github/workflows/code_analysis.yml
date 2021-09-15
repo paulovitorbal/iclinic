@@ -6,22 +6,14 @@ on:
 
 jobs:
   code-analysis:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # important!
-      - name: Install PHP_CodeSniffer
-        run: |
-          curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-          php phpcs.phar --version
-      - uses: thenabeel/action-phpcs@v8
-        with:
-          files: "*.php"
-          phpcs_path: php phpcs.phar
-          standard: phpcs.xml
-      - uses: docker://vimeo/psalm-github-actions
-        with:
-          composer_require_dev: true
-          composer_ignore_platform_reqs: true
-          security_analysis: true
+      - name: Checkout
+        uses: actions/checkout@v2
+          - name: Setup PHP, with composer and extensions
+            uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
+            with:
+              php-version: '8.0'
+              extensions: mbstring, dom, fileinfo, mysql, pdo, redis
+              coverage: xdebug
+

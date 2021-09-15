@@ -1,29 +1,33 @@
-# Lumen PHP Framework
+##Instalation
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
+###Considerations:
+* You are running linux or macOs;
+* You have docker properly installed;
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We
-believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain
-out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction,
-queueing, and caching.
+### Environment configuration
+The very first step is to configure your environment.
 
-## Official Documentation
+There is an example file where you can copy and fill with the desired values.
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+Or you can find a copy of the .env file on: [private bin](https://encryp.ch/note/?556e21d181a33e20#BofSHnC4mYvtH1FFkDDeTh1MLSnUdqYAq3fW15f92D77)
 
-## Contributing
+By using the the password: `mjk4KXY2tcx*puh9khj`
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in
-the [Laravel documentation](https://laravel.com/docs/contributions).
+The file will cease to exist on 21/09/2021.
 
-## Security Vulnerabilities
+### Step-by-step guide
+You can use the make commands available (more on that later) and install the packages using composer;
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All
-security vulnerabilities will be promptly addressed.
+```
+make composer install
+```
+Then run the migrations by using the following command: `docker compose run php-fpm php artisan migrate:fresh` and you should see something like:
+```
+$ docker compose run php-fpm php artisan migrate:fresh
+Dropped all tables successfully.
+Migration table created successfully.
+Migrating: 2021_09_11_153254_create_prescriptions_table
+Migrated:  2021_09_11_153254_create_prescriptions_table (28.77ms)
+```
 
-## License
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

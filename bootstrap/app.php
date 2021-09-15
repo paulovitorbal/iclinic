@@ -25,8 +25,6 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-$app->withFacades();
-
 $app->withEloquent();
 
 /*
@@ -82,5 +80,6 @@ $app->singleton(
 );
 
 $app->register(LumenGeneratorServiceProvider::class);
+$app->register(\Illuminate\Redis\RedisServiceProvider::class);
 
 return $app;

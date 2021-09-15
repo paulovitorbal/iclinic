@@ -1,19 +1,76 @@
-name: code-analysis
+name: continuous-integration
 
 on:
   push:
   pull_request:
 
 jobs:
-  code-analysis:
+  linux_tests:
     runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-          - name: Setup PHP, with composer and extensions
-            uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
-            with:
-              php-version: '8.0'
-              extensions: mbstring, dom, fileinfo, mysql, pdo, redis
-              coverage: xdebug
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: iclinic
+          MYSQL_USER: iclinic
+          MYSQL_PASSWORD: ${{ secrets.DATABASE_TESTING_PASSWORD }}
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      redis:
+        image: redis:5.0
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [ '8.0' ]
+        stability: [ prefer-stable ]
+        include:
+          - php: '8.1'
+            flags: "--ignore-platform-req=php"
+            stability: prefer-stable
+
+    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, gd, redis
+          tools: composer:v2, cs2pr, phpcs, psalm
+          coverage: none
+
+      - name: Install dependencies
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress ${{ matrix.flags }}
+
+      - name: Execute tests
+        continue-on-error: ${{ matrix.php > 8 }}
+        run: vendor/bin/phpunit --verbose
+        env:
+          DB_CONNECTION: mysql
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DB_USERNAME: iclinic
+          DB_DATABASE: iclinic
+          DB_PASSWORD: ${{ secrets.DATABASE_TESTING_PASSWORD }}
+      - name: Test with phpunit
+        run: vendor/bin/phpunit --coverage-text
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: Run phpcs
+        run: phpcs -q --report=checkstyle | cs2pr
+      - name: Run Psalm
+        run: psalm --output-format=github

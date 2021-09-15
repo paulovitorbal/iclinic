@@ -26,4 +26,4 @@ code-analysis: phpcs psalm
 
 all: tests code-analysis
 
-.PHONY: tests code-analysis phpcs psalm
+.PHONY: tests code-analysis phpcs psalm  coverage
