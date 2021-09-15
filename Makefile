@@ -12,6 +12,9 @@ composer:
 tests:
 	docker compose run php-fpm php vendor/bin/phpunit
 
+coverage:
+	docker compose run php-fpm php vendor/bin/phpunit --coverage-text
+
 psalm:
 	docker compose run php-fpm php vendor/bin/psalm
 
@@ -19,6 +22,7 @@ phpcs:
 	docker compose run php-fpm php vendor/bin/phpcs
 
 code-analysis: phpcs psalm
+
 
 all: tests code-analysis
 
