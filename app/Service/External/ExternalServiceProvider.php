@@ -33,7 +33,7 @@ class ExternalServiceProvider extends ServiceProvider implements DeferrableProvi
         foreach (self::GET_CLASSES as $class) {
             $this->app->bind(
                 $class,
-                static function () use ($logger, $factory, $cache, $class){
+                static function () use ($logger, $factory, $cache, $class) {
                     return new $class(
                         $cache,
                         $logger,
@@ -45,7 +45,7 @@ class ExternalServiceProvider extends ServiceProvider implements DeferrableProvi
         foreach (self::POST_CLASSES as $class) {
             $this->app->bind(
                 $class,
-                static function () use ($logger, $factory, $class){
+                static function () use ($logger, $factory, $class) {
                     return new $class(
                         $logger,
                         $factory
