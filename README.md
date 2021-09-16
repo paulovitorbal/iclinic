@@ -17,6 +17,8 @@ By using the the password: `mjk4KXY2tcx*puh9khj`
 The file will cease to exist on 21/09/2021.
 
 ### Step-by-step guide
+Clone this repository to your local machine, open a `shell` session on the directory it was cloned to.
+
 You can use the make commands available (more on that later) and install the packages using composer;
 
 ```shell
@@ -45,5 +47,14 @@ There are a couple of  `make` commands available in order to help with the devel
 * `make code-analysis` will run the *phpcs* and *psalm*;
 * `make` will run the `code-analysis` and `tests`;
 
+## Example request
 
+There is a small shell script to run a `cUrl` request to test the service.
 
+```
+┬─[paulovitorbal@paulos-MacBook-Pro:~/P/Paulovitorbal-iclinic-php-challenge]─[14:13:01]─[G:main=]
+╰─>$ ./scripts/example_request.sh
+{"data":{"id":40,"clinic":{"id":1},"physician":{"id":1},"patient":{"id":1},"text":"Dipirona 1x ao dia","metric":{"id":53}}}⏎
+```
+
+Make sure to check in the script the hostname and port.

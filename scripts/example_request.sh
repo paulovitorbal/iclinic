@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #remember to check the host address and port
 curl -X POST \
-  http://webserver/prescriptions \
+  http://localhost/prescriptions \
   -H 'Content-Type: application/json' \
   -d '{
   "clinic": {
