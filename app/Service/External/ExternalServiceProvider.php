@@ -28,29 +28,23 @@ class ExternalServiceProvider extends ServiceProvider implements DeferrableProvi
     public function boot(
         Repository $cache,
         LoggerInterface $logger,
-        StdClassFactory $factory
+        StdClassFactory $factory,
+        bool $enforceEnvCheck = true
     ): void {
+        if ($enforceEnvCheck && $this->app->runningUnitTests()) {
+            return;
+        }
+
         foreach (self::GET_CLASSES as $class) {
             $this->app->bind(
                 $class,
-                static function () use ($logger, $factory, $cache, $class) {
-                    return new $class(
-                        $cache,
-                        $logger,
-                        $factory
-                    );
-                }
+                fn() => new $class($cache, $logger, $factory)
             );
         }
         foreach (self::POST_CLASSES as $class) {
             $this->app->bind(
                 $class,
-                static function () use ($logger, $factory, $class) {
-                    return new $class(
-                        $logger,
-                        $factory
-                    );
-                }
+                fn() => new $class($logger, $factory)
             );
         }
     }
