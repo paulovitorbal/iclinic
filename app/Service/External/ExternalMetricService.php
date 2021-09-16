@@ -39,7 +39,7 @@ class ExternalMetricService
         try {
             $stdObject = $externalConsumer->post(
                 $this->getConfig()->getRoute(),
-                json_encode($request, JSON_THROW_ON_ERROR),
+                json_encode($request, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
                 $this->getConfig()->getAuthentication()
             );
         } catch (TooMuchAttemptsException $e) {

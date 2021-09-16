@@ -39,6 +39,7 @@ $app->withEloquent();
 */
 
 $app->configure('app');
+$app->configure('external-services');
 
 /*
 |--------------------------------------------------------------------------
@@ -81,5 +82,6 @@ $app->singleton(
 
 $app->register(LumenGeneratorServiceProvider::class);
 $app->register(\Illuminate\Redis\RedisServiceProvider::class);
+$app->register(\App\Service\External\ExternalServiceProvider::class);
 
 return $app;

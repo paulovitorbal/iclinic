@@ -106,9 +106,10 @@ class ExternalConsumer
                         $path,
                         [
                             'headers' => [
-                                'Authorization' => $token
+                                'Authorization' => $token,
+                                'Content-Type' => 'application/json'
                             ],
-                            'json' => $json
+                            'body' => $json
                         ]
                     );
                 }
